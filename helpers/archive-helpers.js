@@ -35,6 +35,7 @@ exports.addUrlToList = function(url, callback) {
 };
 
 exports.isUrlArchived = function(url, callback) {
+  //check is Url is inside of and archive folder
 };
 
 exports.downloadUrls = function(urls) {

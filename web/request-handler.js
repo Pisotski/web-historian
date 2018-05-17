@@ -5,27 +5,40 @@ var fs = require('fs');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
-  console.log(req.url);
   
-  if (req.method === "GET" && req.url === '/') {
-      fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', (err, data) => {
+  if (req.method === 'GET' && req.url === '/') {
+    fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', (err, data) => {
       res.statusCode = 200;
-      // console.log(data);
       res.end(data);
       
     });
   }
-  if (archive.paths.archivedSites + req.url && req.method === "GET" ) {
-    fs.readFile(archive.paths.archivedSites + req.url, 'utf8', (err, data) => {
-      if(err) {
-      res.statusCode = 404;
-      res.end();
+  
+  if (archive.paths.archivedSites + req.url && req.method === 'GET' ) {
+    fs.readFile (archive.paths.archivedSites + req.url, 'utf8', (err, data) => {
+      if (err) {
+        res.statusCode = 404;
+        res.end();
       }
       res.statusCode = 200;
       res.end(data);
     });
   }
   
+  if (req.method === 'POST') {      
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    }).on('end', () => {
+      console.log(body.slice(4));
+      fs.appendFile(archive.paths.list, body.slice(4) + '\n', (err) => {
+        res.type = 'form';
+        res.statusCode = 302;
+        res.end();    
+      });
+    });
+  }
+      
 
   
   // res.end(archive.paths.list);
