@@ -26,17 +26,48 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+  var urlList = [];
+  fs.readFile(this.paths.list, (err, data) => {
+    var parsedData = data + '';
+    console.log(parsedData.split('\n'));
+    callback(parsedData.split('\n'));
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
+  this.readListOfUrls((data) => callback(_.contains(data, url)));
 };
 
 exports.addUrlToList = function(url, callback) {
+  this.isUrlInList(url, (boolean) => boolean === false ? callback(fs.appendFile(this.paths.list, url + '\n')) : null);
 };
 
 exports.isUrlArchived = function(url, callback) {
+  var path = this.paths.archivedSites + url;
+  fs.access(path, (err) => {
+    if (err) {
+      callback(false);
+    } else {
+      callback(true);
+    }
+  });
   //check is Url is inside of and archive folder
 };
 
 exports.downloadUrls = function(urls) {
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
