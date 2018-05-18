@@ -26,35 +26,91 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  var urlList = [];
-  fs.readFile(this.paths.list, (err, data) => {
-    var parsedData = data + '';
-    console.log(parsedData.split('\n'));
-    callback(parsedData.split('\n'));
+  // var urlList = [];
+  // fs.readFile(this.paths.list, (err, data) => {
+  //   if (err) {
+  //   console.log('err');
+  //   callback(err, null)
+  //   } else {
+  //   var parsedData = data + '';
+  //   callback(parsedData.split('\n'));
+  //   }
+
+  // });
+  fs.readFile(exports.paths.list, function(err, sites) {
+    sites = sites.toString().split('\n');
+    if ( callback ) {
+      callback(sites);
+    }
   });
 };
 
 exports.isUrlInList = function(url, callback) {
-  this.readListOfUrls((data) => callback(_.contains(data, url)));
+  // this.readListOfUrls((err, data) => callback(_.contains(data, url)));
+  // var path = this.paths.list
+  // this.readListOfUrls((err, data) => {
+  //   if (err) {
+  //     console.log('error in isUrlInList')
+  //     callback(err, null);
+  //     console.log('error in isUrlInList')
+  //     throw('error');
+  //   } else {
+  //     console.log(data)
+  //     var check = _.contains(data, url);
+  //     console.log(check);
+  //     callback(null, check);
+  //   }
+  // });
+  exports.readListOfUrls(function(sites) {
+    var found = _.any(sites, function(site, i) {
+      return site.match(url);
+    });
+    callback(found);
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
-  this.isUrlInList(url, (boolean) => boolean === false ? callback(fs.appendFile(this.paths.list, url + '\n')) : null);
+  
+  // this.isUrlInList(url, (err, data) => {
+  //   if (err) {
+  //     throw('error');
+  //   } else {
+  //     if (!data) {
+  //       callback(fs.appendFile(this.paths.list, url + '\n'));
+  //     }
+  //   }
+  // })
+  
+  // this.isUrlInList(url, (boolean) => boolean === false ? callback(fs.appendFile(this.paths.list, url + '\n')) : null);
 };
 
 exports.isUrlArchived = function(url, callback) {
-  var path = this.paths.archivedSites + url;
-  fs.access(path, (err) => {
-    if (err) {
-      callback(false);
-    } else {
-      callback(true);
-    }
-  });
+  //
+  // var path = this.paths.archivedSites + '/' + url;
+  // console.log(path);
+  // fs.access(path, (err, data) => callback(!!err === true))
+  
+  //fs.access(path, function(err, data) {
+  // if(err) {
+  // dome some stuff with error; 
+  // callback(err, null); 
+  //} else {
+  // do some stuff with data FROM THE READ;
+  // callback(null, data);
+  //}
+  //});
+
   //check is Url is inside of and archive folder
 };
 
 exports.downloadUrls = function(urls) {
+  // let urls = ['www.google.com', ....]
+  // urls.forEach(function(url) {
+  //isUrlArchvided(url, function(err, data) {
+  // if(err) throw error(err);
+  // console.log('Hello World, I got ', data);     
+  //});
+  //});
 };
 
 
